@@ -23,26 +23,19 @@ class SimpleModel(nn.Module):
 class_loss_fn = nn.CrossEntropyLoss()
 bbox_loss_fn = nn.MSELoss()
 
-# Training pipeline
-def train(dataloader, model, optimizer, num_epochs):
-    model.train()
-    for epoch in range(num_epochs):
+def inference(dataloader, model):
+    model.eval()
+    with torch.no_grad():
         for images, gt_classes, gt_bboxes in dataloader:
-            optimizer.zero_grad()
-            
-            # Forward pass
             class_logits, bbox_preds = model(images)
-            
-            # Calculate losses
-            class_loss = class_loss_fn(class_logits, gt_classes.squeeze())
-            bbox_loss = bbox_loss_fn(bbox_preds, gt_bboxes)
-            total_loss = class_loss + bbox_loss
-            
-            # Backward pass and optimization
-            total_loss.backward()
-            optimizer.step()
-            
-            print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {total_loss.item():.4f}")
+            # Perform further processing as needed
+            # E.g., calculate accuracy, IoU, etc.
+            # For demonstration, we'll just print the shapes
+            print(f"Class logits shape: {class_logits.shape}")
+            print(f"Bbox preds shape: {bbox_preds.shape}")
+
+
+
 
 # Example usage
 if __name__ == "__main__":
